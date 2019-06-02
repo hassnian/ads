@@ -1,0 +1,23 @@
+{
+  "name": "ads",
+  "version": "1.0.0",
+  "description": "ads sprints",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/app.js",
+    "test": "jest --watch"
+  },
+  "author": "hassnian",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.2.6",
+    "mongoose": "^5.5.12",
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "axios": "^0.19.0",
+    "jest": "^24.8.0",
+    "nodemon": "^1.19.1"
+  }
+}
