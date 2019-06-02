@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { store, show } = require("../controllers/ad.controller");
-
+const Ad =require('../models/ad')
 router.get("/", async (req, res) => {
   const response = await show();
   res.json({ ...response });

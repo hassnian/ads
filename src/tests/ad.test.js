@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
-const URI = "mongodb://localhost/ads-test"; // put your url connection here
+const URI = "mongodb://localhost/ads-test"; // testing server
 mongoose.connect(URI, { useNewUrlParser: true });
 const { store, show } = require("../controllers/ad.controller");
 const Ad = require("../models/ad");
-
+const asyncForEach = require("../helpers/helperFunction");
+const  axios =require ('axios')
 //to make sure that there are not false positives
 test("ads test", () => {
   beforeEach(async () => {
@@ -18,11 +19,39 @@ test("ads test", () => {
   });
 });
 
-// test("gets all ads", async () => {
-//   const ads = await show();
-//   console.log(ads);
-//   expect(true).toBe(true);
-// });
+test("shows all the ads", async () => {
+  const mockups = [
+    { title: `selling${Math.random()}water${Math.random()}`, description: "123" },
+    { title: `selling${Math.random()}water${Math.random()}`, description: "123"  }
+  ];
+
+  const mAd1=new Ad(mockups[0])
+  await mAd1.save()
+  const mAd2=new Ad(mockups[1])
+  await mAd2.save()
+
+// const saveAll=async ()=>{
+//     await asyncForEach(mockups, async ad => {
+//       const newAd =  new Ad(ad);
+//       await newAd.save();
+//   });
+
+// }
+// saveAll()
+    
+
+  const {ads} = await show();
+  let actual=true; 
+   ads.forEach((ad,i) => {
+      if(ad.title!==mockups[i].title){
+          actual= false
+      }
+  });
+  const expected=true;
+  expect(expected).toBe(actual);
+});
+
+//testing Store
 
 test("store an ad", async () => {
   const newAd = new Ad({ title: "selling something", description: "123" });
@@ -33,17 +62,26 @@ test("store an ad", async () => {
 });
 
 test("store fails when title is longer than 50 ", async () => {
-    const newAd = new Ad({ title: "012345678910123456789101234567891012345678910123456", description: "123" });
-    await store(newAd);
-    const expected = 0;
-    const actual = await Ad.where({ _id: newAd["_id"] }).countDocuments();
-    expect(expected).toEqual(actual);
+  const newAd = new Ad({
+    title: "012345678910123456789101234567891012345678910123456",
+    description: "123"
   });
+  await store(newAd);
+  const expected = 0;
+  const actual = await Ad.where({ _id: newAd["_id"] }).countDocuments();
+  expect(expected).toEqual(actual);
+});
 
-  test("store fails when title is longer than 50 ", async () => {
-    const newAd = new Ad({ title: "same", description: "same" });
-    await store(newAd);
-    const expected = 0;
-    const actual = await Ad.where({ _id: newAd["_id"] }).countDocuments();
-    expect(expected).toEqual(actual);
-  });
+test("store fails when title and description are the same ", async () => {
+  const newAd = new Ad({ title: "same", description: "same" });
+  await store(newAd);
+  const expected = 0;
+  const actual = await Ad.where({ _id: newAd["_id"] }).countDocuments();
+  expect(expected).toEqual(actual);
+});
+// endpoints
+// test("store using endpoints",async ()=>{
+//     const response =await axios.post('http://localhost:3000',{title:"pers",description:"aaa"})
+
+//     console.log(response.data);
+// })
