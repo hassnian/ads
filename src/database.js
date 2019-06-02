@@ -1,4 +1,11 @@
 const mongoose=require('mongoose');
-mongoose.connect('')
 
-//TODO: export and handle mongo db connection
+const URI="mongodb://localhost/ads"; // put your url connection here 
+
+mongoose.connect(URI,{ useNewUrlParser: true })
+.then(db=>console.log("DB is connected"))
+.catch(err=>console.log(err));
+
+
+module.exports= mongoose
+

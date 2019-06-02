@@ -4,6 +4,7 @@ const morgan=require('morgan');
 //import database
 const PORT=3000;
 
+const {mongoose}=require('./database')
 
 // settings
 app.set('port', process.env.PORT || PORT);
