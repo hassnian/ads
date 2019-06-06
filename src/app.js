@@ -2,7 +2,7 @@ const express=require('express');
 const app=express();
 const morgan=require('morgan');
 //import database
-const PORT=3000;
+const PORT=4000;
 
 const {mongoose}=require('./database')
 

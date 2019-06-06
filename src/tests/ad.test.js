@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const URI = "mongodb://localhost/ads-test"; // testing server
 mongoose.connect(URI, { useNewUrlParser: true });
-const { store, show } = require("../controllers/ad.controller");
+const { store, show , destroy } = require("../controllers/ad.controller");
 const Ad = require("../models/ad");
 const asyncForEach = require("../helpers/helperFunction");
 const  axios =require ('axios')
@@ -53,7 +53,7 @@ test("shows all the ads", async () => {
 
 //testing Store
 
-test("store an ad", async () => {
+test("if stores an ad successfully", async () => {
   const newAd = new Ad({ title: "selling something", description: "123" });
   await store(newAd);
   const expected = 1;
@@ -61,7 +61,7 @@ test("store an ad", async () => {
   expect(expected).toEqual(actual);
 });
 
-test("store fails when title is longer than 50 ", async () => {
+test("if store fails when title is longer than 50 ", async () => {
   const newAd = new Ad({
     title: "012345678910123456789101234567891012345678910123456",
     description: "123"
@@ -72,16 +72,27 @@ test("store fails when title is longer than 50 ", async () => {
   expect(expected).toEqual(actual);
 });
 
-test("store fails when title and description are the same ", async () => {
+test("if store fails when title and description are the same ", async () => {
   const newAd = new Ad({ title: "same", description: "same" });
   await store(newAd);
   const expected = 0;
   const actual = await Ad.where({ _id: newAd["_id"] }).countDocuments();
   expect(expected).toEqual(actual);
 });
-// endpoints
-// test("store using endpoints",async ()=>{
-//     const response =await axios.post('http://localhost:3000',{title:"pers",description:"aaa"})
 
-//     console.log(response.data);
-// })
+test("if an ad is destroyed succesfully ", async () => {
+  const newAd = new Ad({ title: "not50", description: "notsame" });
+  const id=newAd["_id"];
+  const expected = 0;
+  await store(newAd);
+  await destroy(id);
+  const actual = await Ad.where({ _id: newAd["_id"] }).countDocuments();
+  expect(expected).toEqual(actual);
+});
+
+// endpoints
+ test("if a new Ad is created successfully",async ()=>{
+      const newAd={title:"hello world",description:"asd"}
+     const ad=Ad(newAd);
+     expect(ad.title).toEqual(newAd.title)
+})
