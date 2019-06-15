@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
   const response = await store(newAd);
   res.json({ ...response });
 });
-// router.put('/:id') //Like a post? SPRINT 3
+// router.post('/fav/:id') //fav a post? SPRINT 3
 // router.delete('/:id') SPRINT 1
 router.delete('/:id', async (req,res)=>{
   const {id}=req.params;
