@@ -75,7 +75,7 @@ test("if checkIfAdExistsById() returns false when ad is not founded", async () =
   expect(actual).toBe(expected);
 });
 
-test("if checkIfAdExistsById() returns true when ad is founded", async () => {
+test("if checkIfAdExistsById() returns true when ad is found", async () => {
   const newAd = new Ad({  title: "not", description: "same"});
   await store(newAd);
   const actual=await newAd.checkIfAnAdExists();
@@ -83,39 +83,22 @@ test("if checkIfAdExistsById() returns true when ad is founded", async () => {
   expect(actual).toBe(expected);
 });
 
-// testing shows
+// testing index
 
 test("shows all the ads", async () => {
-  const mockups = await getValidAds(2)
-
-  //const mAd1=new Ad(mockups[0])
-  //await mAd1.save()
-  //const mAd2=new Ad(mockups[1])
-  //await mAd2.save()
+  const response = await getValidAds(10)
+  const mockups = response.ads
+  let actual=true; 
 
   for(let i=0;i<mockups.length;i++){
     const mAd= new Ad(mockups[i]);
     await mAd.save();
   }
 
-// const saveAll=async ()=>{
-//     await asyncForEach(mockups, async ad => {
-//       const newAd =  new Ad(ad);
-//       await newAd.save();
-//   });
-
-// }
-// saveAll()
-
-
-    
-
   const {ads} = await index();
-  console.log("ads");
-  console.log(ads)
-  let actual=true; 
-   ads.forEach((ad,i) => {
-      if(ad.title!==mockups[i].title){
+  ads.forEach((ad,i) => {
+    console.log(ad.title!==mockups[i].title)
+    if(ad.title!==mockups[i].title){
           actual= false
       }
   });
@@ -136,7 +119,6 @@ test("if stores an ad successfully", async () => {
 test("if stores fails when title is not passed", async () => {
   const newAd = new Ad({  description: "123" });
   const response=await store(newAd);  
-  console.log(response)
   const expected = false;
   const actual=await newAd.checkIfAnAdExists(); 
   expect(actual).toBe(expected);
@@ -178,7 +160,9 @@ test("if store fails when title and description are the same ", async () => {
 });
 
 test("if an ad is destroyed succesfully  ", async () => {
-  const newAd = new Ad({ title: "not50", description: "notsame" });
+  const newValid=await getValidAds()
+  console.log(newValid);
+  const newAd = new Ad(newValid);
   const expected = false;
   await store(newAd);
   await destroy(newAd);
