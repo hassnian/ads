@@ -3,7 +3,7 @@ const URI = "mongodb://localhost/ads-test"; // testing server
 mongoose.connect(URI, { useNewUrlParser: true });
 const { store, index , destroy } = require("../controllers/ad.controller");
 const Ad = require("../models/ad");
-const asyncForEach = require("../helpers/helperFunction");
+const {getValidAds}=require('../factories/ad.factories')
 
 
 //to make sure that there are not false positives
@@ -86,15 +86,17 @@ test("if checkIfAdExistsById() returns true when ad is founded", async () => {
 // testing shows
 
 test("shows all the ads", async () => {
-  const mockups = [
-    { title: `selling${Math.random()}water${Math.random()}`, description: "123" },
-    { title: `selling${Math.random()}water${Math.random()}`, description: "123"  }
-  ];
+  const mockups = await getValidAds(2)
 
-  const mAd1=new Ad(mockups[0])
-  await mAd1.save()
-  const mAd2=new Ad(mockups[1])
-  await mAd2.save()
+  //const mAd1=new Ad(mockups[0])
+  //await mAd1.save()
+  //const mAd2=new Ad(mockups[1])
+  //await mAd2.save()
+
+  for(let i=0;i<mockups.length;i++){
+    const mAd= new Ad(mockups[i]);
+    await mAd.save();
+  }
 
 // const saveAll=async ()=>{
 //     await asyncForEach(mockups, async ad => {
@@ -104,9 +106,13 @@ test("shows all the ads", async () => {
 
 // }
 // saveAll()
+
+
     
 
   const {ads} = await index();
+  console.log("ads");
+  console.log(ads)
   let actual=true; 
    ads.forEach((ad,i) => {
       if(ad.title!==mockups[i].title){
@@ -188,5 +194,10 @@ test("if destroy() returns false when the id is invalid ", async () => {
   expect(actual).toBe(expected);
 });
 
+
+test("facories",async()=>{
+  const response=await getValidAds(3)
+
+})
 
  
