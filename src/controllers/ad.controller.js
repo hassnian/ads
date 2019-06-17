@@ -18,7 +18,6 @@ module.exports =class AdClass  {
 
   static async destroy(ad) {
     const response =await ad.checkIfAnAdExists();
-    
     if(!response){
       return {Succesfull:false}
     }

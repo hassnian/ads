@@ -97,7 +97,6 @@ test("shows all the ads", async () => {
 
   const {ads} = await index();
   ads.forEach((ad,i) => {
-    console.log(ad.title!==mockups[i].title)
     if(ad.title!==mockups[i].title){
           actual= false
       }
@@ -161,7 +160,6 @@ test("if store fails when title and description are the same ", async () => {
 
 test("if an ad is destroyed succesfully  ", async () => {
   const newValid=await getValidAds()
-  console.log(newValid);
   const newAd = new Ad(newValid);
   const expected = false;
   await store(newAd);

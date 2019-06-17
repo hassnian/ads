@@ -24,7 +24,7 @@ test("if getValidAds() returns true  invalid param is paseed", async () => {
 });
 
 
-test("if getValidAds() returns falsy  when is passed an invalid argument/param ", async () => {
+test("if getValidAds() returns falsy  when is passed an invalid param ", async () => {
     const length="[10]";
     const response= await adFactories.getValidAds(length);
     const actual=false;

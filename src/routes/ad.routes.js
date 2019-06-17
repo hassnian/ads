@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { store, show,destroy } = require("../controllers/ad.controller");
+const { store, index,destroy } = require("../controllers/ad.controller");
 const Ad =require('../models/ad')
+
 router.get("/", async (req, res) => {
-  const response = await show();
+  const response = await index();
   res.json({ ...response });
 });
-// req.params.id
-// router.get('/:id') //show a single onw SPRINT 3
+
+// router.get('/:id') //show a single ad on SPRINT 3
 
 router.post("/", async (req, res) => {
   const {title,description}=req.body
@@ -15,12 +16,15 @@ router.post("/", async (req, res) => {
   const response = await store(newAd);
   res.json({ ...response });
 });
+
 // router.post('/fav/:id') //fav a post? SPRINT 3
-// router.delete('/:id') SPRINT 1
+// router.delete('/expire/:date') // sprint 2
+
 router.delete('/:id', async (req,res)=>{
   const {id}=req.params;
-  const response=await destroy(id);
-  return response
+  const newAd=new Ad({"_id":id})
+  const response=await destroy(newAd);
+  res.json({response})
 })
 
 module.exports = router;
